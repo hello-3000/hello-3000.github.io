@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>web安全01：基础环境搭建 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="基础环境搭建（linux+nginx+php-fpm+mysql）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web安全01：基础环境搭建">
+<meta property="og:url" content="http://example.com/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="基础环境搭建（linux+nginx+php-fpm+mysql）">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://img-blog.csdn.net/20180729144201803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzk4NzQ4Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://img-blog.csdn.net/20180729144221130?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzk4NzQ4Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="article:published_time" content="2020-10-01T10:23:22.244Z">
+<meta property="article:modified_time" content="2020-09-13T10:27:39.626Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20180729144201803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzk4NzQ4Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-web安全01：基础环境搭建" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" class="article-date">
+  <time datetime="2020-10-01T10:23:22.244Z" itemprop="datePublished">2020-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8/">web安全入门</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      web安全01：基础环境搭建
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="基础环境搭建（linux-nginx-php-fpm-mysql）"><a href="#基础环境搭建（linux-nginx-php-fpm-mysql）" class="headerlink" title="基础环境搭建（linux+nginx+php-fpm+mysql）"></a>基础环境搭建（linux+nginx+php-fpm+mysql）</h2><a id="more"></a>
+
+<ol>
+<li><p>第零步 搭建前遇到的问题</p>
+<p>本人目前大一，Linux目前连最简单的操作都不熟练，因为疫情的原因，Linux我是上的网课，他每次都是早上第一二节课，再加上我的那个老师就是个ppt编译器，同时我那么懒，所以我就没听课（老传统了），正因如此，在搭建环境之前，我就遇见了不少问题。</p>
+<ul>
+<li><p>文件无法在虚拟机和真实机之间进行相互传输。但是我明明是安装了VMwaretools的，所以卸掉重新装了一次，但遇到了如下图所示的错误信息</p>
+<p><img src="https://img-blog.csdn.net/20180729144201803?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzk4NzQ4Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"></p>
+<p>这个问题的解决办法，首先是把Linux虚拟机关机或退出，然后点击“编辑虚拟机设置”，在CD/DVD选项中，点击“使用物理驱动器”。</p>
+<p><img src="https://img-blog.csdn.net/20180729144221130?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl8zNzk4NzQ4Nw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70"></p>
+<p>之后重新安装就可以了。</p>
+</li>
+</ul>
+</li>
+<li><p>第一步 Nginx</p>
+<p>(1).安装nginx</p>
+<blockquote>
+<p>yum install nginx</p>
+</blockquote>
+<p>(2)启动nginx</p>
+<blockquote>
+<p>systemctl start nginx</p>
+</blockquote>
+<p>除了systemctl  start nginx 之外，常用的相关命令还有systemctl stop nginx。systemctl restart ngingx，systemctl   staus nginx</p>
+<p>(3)测试nginx是否成功</p>
+<p>浏览器输入ip地址，显示了nginx，那么你就成功了</p>
+</li>
+<li><p>第二步  PHP</p>
+<p>(1)安装php</p>
+<p>yum install php php-mysql php-fpm</p>
+<p>当最后一行显示complete！时，安装成功，如果出错，可能是网络的问题，若其他的问题，建议百度，因为，我作为一个新人，我觉得这部分是最痛苦的，成功不成功，我真心觉得和运气有关，甚至对于新手，这就是玄学！！！</p>
+<p>(2)编辑PHP中的配置文件，/etc/php.ini，注意去掉分号注释</p>
+<p>vim /etc/php.ini</p>
+<p>将</p>
+<blockquote>
+<p>;cgi.fix_pathinfo=1</p>
+</blockquote>
+<p>改为</p>
+<blockquote>
+<p>cgi.fix_pathinfo=0</p>
+</blockquote>
+<p>(3)编辑PHP-FPM配置文件</p>
+<p>vim /etc/php-fpm.d/<a target="_blank" rel="noopener" href="http://www.conf/">www.conf</a></p>
+<p>将</p>
+<blockquote>
+<p>user=apache</p>
+<p>group=apache</p>
+</blockquote>
+<p>改为</p>
+<blockquote>
+<p>user=nginx</p>
+<p>group=nginx</p>
+</blockquote>
+<p>(4)启动php-fpm</p>
+<blockquote>
+<p>systemctl start php-fpm</p>
+</blockquote>
+<p>(5)设置开机启动</p>
+<blockquote>
+<p>systemctl enable php-fpm</p>
+</blockquote>
+<p>(6)重启Nginx</p>
+<blockquote>
+<p>systemctl restart nginx</p>
+</blockquote>
+<p>(7)在/usr/share/nginx/html/目录下创建phpinfo.php</p>
+<blockquote>
+<?php phpinfo(); ?>
+</blockquote>
+<p>(8)在浏览器上访问，地址/phpinfo.php，出现一个紫色界面(不会有人没见过吧），那么恭喜你，又成功了</p>
+</li>
+<li><p>MySql</p>
+<p>(1)下载mysql的mysql-server文件</p>
+<blockquote>
+<p>wget <a target="_blank" rel="noopener" href="http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm">http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm</a></p>
+</blockquote>
+<p>(2)安装yum respository</p>
+<blockquote>
+<p>yum install mysql-community-release-el7-5.noarch.rpm</p>
+</blockquote>
+<p>(3)安装mysql服务器</p>
+<blockquote>
+<p>yum install mysql-community-server</p>
+</blockquote>
+<p>(4)重启mysql服务</p>
+<blockquote>
+<p>systenctl start mysql</p>
+</blockquote>
+<p>(5)设置mysql的root账户的密码</p>
+<blockquote>
+<p>mysql -uroot</p>
+<p>mysql&gt;set password for ‘root’@’%’=password(‘mypassword!’);</p>
+<p>mysql&gt;exit</p>
+</blockquote>
+<p>(6)登录mysql的账号root</p>
+<blockquote>
+<p>mysql -uroot -p</p>
+</blockquote>
+<p>输入密码（密码在linux看不见哦）</p>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" data-id="ckfqo7sbk000brktuhlqm2jo6" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E5%AE%89%E5%85%A8/" rel="tag">web安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          web安全02：认识数据库
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/10/01/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">php面向对象的程序设计</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/php%E5%9F%BA%E7%A1%80/">php基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">php面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8/">web安全入门</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E5%9F%BA%E7%A1%80/" rel="tag">php基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" rel="tag">php面向对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E5%AE%89%E5%85%A8/" rel="tag">web安全</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/php%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">php基础</a> <a href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">php面向对象</a> <a href="/tags/web%E5%AE%89%E5%85%A8/" style="font-size: 20px;">web安全</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/">web安全02：认识数据库</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">web安全01：基础环境搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/">php面向对象的程序设计</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/">php的回炉重造</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/python%E8%B5%84%E6%BA%90%E6%8E%A2%E6%B5%8B%E5%B7%A5%E5%85%B7%E7%BC%96%E5%86%99/">python资源探测工具编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

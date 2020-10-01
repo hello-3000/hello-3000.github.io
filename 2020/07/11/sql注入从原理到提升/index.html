@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>sql注入从原理到提升 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="sql注入从原理到提升">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sql注入从原理到提升">
+<meta property="og:url" content="http://example.com/2020/07/11/sql%E6%B3%A8%E5%85%A5%E4%BB%8E%E5%8E%9F%E7%90%86%E5%88%B0%E6%8F%90%E5%8D%87/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="sql注入从原理到提升">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggmfjscjufj30yt0mph1i.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggmfkavh67j30yy08ewj7.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggmg9t2te8j30ze0fwgsq.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggmge9e198j30yj04btae.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggnq5rl7rtj312z06jwks.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggnqb694rej30pq0cqq6m.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggnslav5wvj30ph0740vr.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggntsqw4fpj30pz0ccafi.jpg">
+<meta property="article:published_time" content="2020-07-10T17:47:31.000Z">
+<meta property="article:modified_time" content="2020-09-13T10:28:56.616Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1ggmfjscjufj30yt0mph1i.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-sql注入从原理到提升" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/07/11/sql%E6%B3%A8%E5%85%A5%E4%BB%8E%E5%8E%9F%E7%90%86%E5%88%B0%E6%8F%90%E5%8D%87/" class="article-date">
+  <time datetime="2020-07-10T17:47:31.000Z" itemprop="datePublished">2020-07-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      sql注入从原理到提升
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="sql注入从原理到提升"><a href="#sql注入从原理到提升" class="headerlink" title="sql注入从原理到提升"></a>sql注入从原理到提升</h1><a id="more"></a>
+
+<h2 id="mysql常用函数"><a href="#mysql常用函数" class="headerlink" title="mysql常用函数"></a>mysql常用函数</h2><p>首先建议查看官方文档</p>
+<ol>
+<li><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggmfjscjufj30yt0mph1i.jpg" alt="chrome_IsDRbcgadQ.png"><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggmfkavh67j30yy08ewj7.jpg" alt="chrome_7uQ5muaWB6.png"><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggmg9t2te8j30ze0fwgsq.jpg" alt="chrome_Ke8lfaKDaO.png"><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggmge9e198j30yj04btae.jpg" alt="chrome_VLl2mhmAcT.png"></li>
+</ol>
+<h2 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h2><h4 id="布尔盲注原理"><a href="#布尔盲注原理" class="headerlink" title="布尔盲注原理"></a>布尔盲注原理</h4><blockquote>
+<p>布尔盲注适用场景</p>
+<p>1.waf或者过滤函数完全过滤掉union关键字</p>
+<p>2.页面中不再回显具体数据，但是在sql语句执行成功或失败返回不同的内容</p>
+</blockquote>
+<h4 id="布尔盲注实验"><a href="#布尔盲注实验" class="headerlink" title="布尔盲注实验"></a>布尔盲注实验</h4><p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggnq5rl7rtj312z06jwks.jpg" alt="chrome_7VaZ49uD9f.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggnqb694rej30pq0cqq6m.jpg" alt="chrome_iwMpTAOtW4.png"></p>
+<h4 id="布尔盲注过滤绕过技巧"><a href="#布尔盲注过滤绕过技巧" class="headerlink" title="布尔盲注过滤绕过技巧"></a>布尔盲注过滤绕过技巧</h4><h6 id="绕过核心就是将布尔利用技术中的关键字进行替换"><a href="#绕过核心就是将布尔利用技术中的关键字进行替换" class="headerlink" title="绕过核心就是将布尔利用技术中的关键字进行替换"></a>绕过核心就是将布尔利用技术中的关键字进行替换</h6><p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggnslav5wvj30ph0740vr.jpg" alt="chrome_YfCqjR0qSG.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1ggntsqw4fpj30pz0ccafi.jpg" alt="chrome_cfFPc1QE03.png"></p>
+<h4 id="布尔盲注ctf解题方法"><a href="#布尔盲注ctf解题方法" class="headerlink" title="布尔盲注ctf解题方法"></a>布尔盲注ctf解题方法</h4><blockquote>
+<p>对于盲注，如果单纯使用手工很耗时间，可以使用python脚本</p>
+</blockquote>
+<p>步骤：</p>
+<ol>
+<li><p>确定注入点</p>
+</li>
+<li><p>对注入点测试，获取原始注入利用语句</p>
+</li>
+<li><p>python编写代码自动化注入</p>
+</li>
+</ol>
+<h2 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h2><h4 id="报错注入原理"><a href="#报错注入原理" class="headerlink" title="报错注入原理"></a>报错注入原理</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mastergu2/article/details/106671359?utm_medium=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.compare&depth_1-utm_source=distribute.pc_relevant.none-task-blog-BlogCommendFromMachineLearnPai2-3.compare">这篇文章写的不错，至少我看懂了，其实这玩意儿困扰了我挺久的</a></p>
+<blockquote>
+<p>利用mysql数据库报错，导致输出查询数据信息</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/07/11/sql%E6%B3%A8%E5%85%A5%E4%BB%8E%E5%8E%9F%E7%90%86%E5%88%B0%E6%8F%90%E5%8D%87/" data-id="ckfqo7sbj000arktu5k6y4n8u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/07/13/python%E4%B8%8Ehttp%E4%BA%A4%E4%BA%92/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          python与http交互
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/08/web%E5%AE%89%E5%85%A803/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">web安全03</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/php%E5%9F%BA%E7%A1%80/">php基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">php面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8/">web安全入门</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E5%9F%BA%E7%A1%80/" rel="tag">php基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" rel="tag">php面向对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E5%AE%89%E5%85%A8/" rel="tag">web安全</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/php%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">php基础</a> <a href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">php面向对象</a> <a href="/tags/web%E5%AE%89%E5%85%A8/" style="font-size: 20px;">web安全</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/">web安全02：认识数据库</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">web安全01：基础环境搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/">php面向对象的程序设计</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/">php的回炉重造</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/python%E8%B5%84%E6%BA%90%E6%8E%A2%E6%B5%8B%E5%B7%A5%E5%85%B7%E7%BC%96%E5%86%99/">python资源探测工具编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

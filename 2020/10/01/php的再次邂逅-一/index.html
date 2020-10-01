@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>php的回炉重造 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="php的回炉重造">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php的回炉重造">
+<meta property="og:url" content="http://example.com/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="php的回炉重造">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gfz7o0m948j30rs0dfq5b.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gfz7wqvqx0j306h08zq2t.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gfz84xjxkmj30ce07nt8m.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gfz884vr76j307409tmx1.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gfzad69w99j309t02udfm.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gg00huzb1dj30bh0a7mx7.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gg00ixs9onj30ez0cuq34.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gg00kp3uzcj30cy053q2t.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gg00lpkqswj30ei060glj.jpg">
+<meta property="article:published_time" content="2020-10-01T10:23:22.233Z">
+<meta property="article:modified_time" content="2020-06-26T10:07:07.892Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="php基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/007YMQQNly1gfz7o0m948j30rs0dfq5b.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-php的再次邂逅-一" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/" class="article-date">
+  <time datetime="2020-10-01T10:23:22.233Z" itemprop="datePublished">2020-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/php%E5%9F%BA%E7%A1%80/">php基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      php的回炉重造
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="php的回炉重造"><a href="#php的回炉重造" class="headerlink" title="php的回炉重造"></a>php的回炉重造</h2><a id="more"></a>
+
+<ol>
+<li><p>变量</p>
+<ul>
+<li><p>变量：用于存取信息的<strong>容器</strong>！</p>
+<ul>
+<li>变量以$符号开始，后面跟着变量的名称。</li>
+<li>变量名是区分大小写的（$y和$Y是两个不同的变量）</li>
+<li>命名的规则和c语言一样，就不多赘述了</li>
+<li>**注意在PHP中，php语句和php变量都是区分大小写的 **</li>
+</ul>
+</li>
+<li><p><strong>php变量，没有声明变量的命令。变量在第一次被赋值被创建！</strong></p>
+</li>
+<li><p>php是一门弱类型的语言，在声明变量时，不必注明其类型，php会根据变量的值，自动将其转换为正确的类型！</p>
+</li>
+<li><p>php变量作用域</p>
+<p>local（局部）</p>
+<p>global（全部）</p>
+<p>static(静态)</p>
+<ul>
+<li><p>在函数内定义的变量，为局部变量，只能在函数内使用</p>
+<p>在函数外定义的变量，为全局变量，只能在函数外使用</p>
+<p><strong>不同函数的局部变量发生了重名也没有关系，因为调用函数时只认识自己函数内定义的变量</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gfz7o0m948j30rs0dfq5b.jpg" alt="nE0AVeGwQ2.png"></p>
+</li>
+<li><p>在函数内部也可以调用global变量，只需在变量前面添加global</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gfz7wqvqx0j306h08zq2t.jpg" alt="chrome_xDP3VyNtTL.png"></p>
+</li>
+<li><p>php还有一个名为$GLOBALS[index]的数组，存储了所有的全局变量，下标存有变量名，既可在函数内部使用，又可在函数外使用。</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gfz84xjxkmj30ce07nt8m.jpg" alt="chrome_Qy0PktBG1g.png"></p>
+</li>
+<li><p>当函数执行完后，会删除掉所有变量，不过有的时候，我们并不像删掉变量的数据，所以此时建议在定义函数内定义变量前，可以加上个static</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gfz884vr76j307409tmx1.jpg" alt="chrome_0XF300hu3m.png"></p>
+<p>不过，虽然函数调用结束后，也不会删掉这个局部变量，但static变量仍然是属于局部变量的一部分。</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.w3school.com.cn/php/php_datatypes.asp">echo和print的区别</a></p>
+</li>
+<li><p>字符串函数</p>
+<ul>
+<li><p><strong>strlen()</strong>,用于返回字符串的长度，以字符计</p>
+</li>
+<li><p><strong>str_word_count()</strong>,对字符串中的单词数进行统计</p>
+</li>
+<li><p><strong>strrev()</strong>,用于反转字符串</p>
+</li>
+<li><p><strong>strpos()</strong>,用于检索字符串中指定的字符或文本，如果找到匹配，则返回首个匹配的字符位置，未找到，则返回false，<strong>位置标号从0开始</strong></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gfzad69w99j309t02udfm.jpg" alt="chrome_F1dMxFhbbq.png"></p>
+<p>上图返回结果为6.</p>
+</li>
+<li><p><strong>str_replace()</strong>,该函数用一些字符替换字符串中的另一些字符</p>
+<blockquote>
+<?php
+
+ echo  str_replace("world","kitty","hello world!");   //输出结果为 hello Kitty！
+
+?>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>常量</p>
+<ul>
+<li><p>常量类似变量，但是常量一旦被定义就无法被更改！</p>
+</li>
+<li><p>define（）</p>
+<ol>
+<li>首个参数定义常量的名称</li>
+<li>第二个参数定义常量的值</li>
+<li>第三个参数可选，规定该常量名称是否对大小写敏感，默认为false对大小写敏感，改为true后，对大小写不敏感</li>
+</ol>
+<blockquote>
+ <?php
+
+define("GREETING","welcome to my blog!"); 
+
+echo GREETING;
+
+?>
+</blockquote>
+<p>常量是全局的，在函数内可使用，函数外也可使用！</p>
+</li>
+</ul>
+</li>
+<li><p>运算符</p>
+<p>在php中，数组可以用+合并</p>
+</li>
+<li><p>数组</p>
+<ol>
+<li><p>数组分为  索引数组，关联数组，多维数组</p>
+</li>
+<li><p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gg00huzb1dj30bh0a7mx7.jpg" alt="chrome_h6FUVHsYem.png"></p>
+</li>
+<li><p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gg00ixs9onj30ez0cuq34.jpg" alt="chrome_hFwHsTRDkh.png"></p>
+</li>
+<li><p>foreach 针对数组的函数</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gg00kp3uzcj30cy053q2t.jpg" alt="pfWN9bBGL1.png"></p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNly1gg00lpkqswj30ei060glj.jpg" alt="rCSkB7Ghqj.png"></p>
+</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/" data-id="ckfqo7sb70000rktu6mps6hh0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/php%E5%9F%BA%E7%A1%80/" rel="tag">php基础</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/10/01/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          php面向对象的程序设计
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/07/15/python%E8%B5%84%E6%BA%90%E6%8E%A2%E6%B5%8B%E5%B7%A5%E5%85%B7%E7%BC%96%E5%86%99/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">python资源探测工具编写</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/php%E5%9F%BA%E7%A1%80/">php基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">php面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8/">web安全入门</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E5%9F%BA%E7%A1%80/" rel="tag">php基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" rel="tag">php面向对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E5%AE%89%E5%85%A8/" rel="tag">web安全</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/php%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">php基础</a> <a href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">php面向对象</a> <a href="/tags/web%E5%AE%89%E5%85%A8/" style="font-size: 20px;">web安全</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/">web安全02：认识数据库</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">web安全01：基础环境搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/">php面向对象的程序设计</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/">php的回炉重造</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/python%E8%B5%84%E6%BA%90%E6%8E%A2%E6%B5%8B%E5%B7%A5%E5%85%B7%E7%BC%96%E5%86%99/">python资源探测工具编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

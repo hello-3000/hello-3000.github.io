@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>web安全02：认识数据库 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="web安全02 数据库基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="web安全02：认识数据库">
+<meta property="og:url" content="http://example.com/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="web安全02 数据库基础">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxryk21drj309o01g743.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxrzcktcrj30a603ca9x.jpg">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxs3clxi4j30fs05laa1.jpg">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_QwZe2cwg5b.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_vBPA66dwWf.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/jglPAIlsXt.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/chrome_PQ9gvbg8oa.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/chrome_yGyoW7Dt3Y.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/1kgMXNX3Gn.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_Tnr5Bbooqa.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/2TyAinUomd.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_4MMkAuL6Ia.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_50CyeWnUqq.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_Tv5OH83ZBX.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_SjTxS6lhbW.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/iulvKX2WlQ.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/chrome_QkZHl7V3ml.png">
+<meta property="og:image" content="c:/Users/hello/Documents/ShareX/Screenshots/2020-06/mysql_Cgtkvfiem9.png">
+<meta property="article:published_time" content="2020-10-01T10:23:22.245Z">
+<meta property="article:modified_time" content="2020-09-13T10:30:59.925Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="web安全">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxryk21drj309o01g743.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-web安全02：认识数据库" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/" class="article-date">
+  <time datetime="2020-10-01T10:23:22.245Z" itemprop="datePublished">2020-10-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/web%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8/">web安全入门</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      web安全02：认识数据库
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="web安全02-数据库基础"><a href="#web安全02-数据库基础" class="headerlink" title="web安全02 数据库基础"></a>web安全02 数据库基础</h1><a id="more"></a>
+
+<h2 id="一：数据库的分类"><a href="#一：数据库的分类" class="headerlink" title="一：数据库的分类"></a>一：数据库的分类</h2><ol>
+<li><p>关系型数据库</p>
+<p>关系型数据库模型是把复杂的数据结构归结为简单的二元关系（即二维表格形式）。在关系型数据库中，对数据的操作几乎全部建立在一个或多个关系表格上，通过对这些关联的表格分类、合并、连接或选取等运算来实现数据库的管理。</p>
+<p>关系型数据库诞生40多年了，从理论产生发展到现实产品，例如：Oracle和MySQL，Oracle在数据库领域上升到霸主地位，形成每年高达数百亿美元的庞大产业市场。</p>
+</li>
+<li><p>非关系型数据库</p>
+<p>1）键值存储数据库（key-value）</p>
+<p>键值数据库就类似传统语言中使用的哈希表。可以通过key来添加、查询或者删除数据库，因为使用key主键访问，所以会获得很高的性能及扩展性。</p>
+<p>键值数据库主要使用一个哈希表，这个表中有一个特定的键和一个指针指向特定的数据。Key/value模型对于IT系统来说的优势在于简单、易部署、高并发。</p>
+<p>典型产品：Memcached、Redis、MemcacheDB</p>
+<p>（2）列存储（Column-oriented）数据库</p>
+<p>列存储数据库将数据存储在列族中，一个列族存储经常被一起查询的相关数据，比如人类，我们经常会查询某个人的姓名和年龄，而不是薪资。这种情况下姓名和年龄会被放到一个列族中，薪资会被放到另一个列族中。</p>
+<p>这种数据库通常用来应对分布式存储海量数据。</p>
+<p>典型产品：Cassandra、HBase</p>
+<p>（3）面向文档（Document-Oriented）数据库</p>
+<p>文档型数据库的灵感是来自于Lotus Notes办公软件，而且它同第一种键值数据库类似。该类型的数据模型是版本化的文档，半结构化的文档以特定的格式存储，比如JSON。文档型数据库可以看作是键值数据库的升级版，允许之间嵌套键值。而且文档型数据库比键值数据库的查询效率更高。</p>
+<p>面向文档数据库会将数据以文档形式存储。每个文档都是自包含的数据单元，是一系列数据项的集合。每个数据项都有一个名词与对应值，值既可以是简单的数据类型，如字符串、数字和日期等；也可以是复杂的类型，如有序列表和关联对象。数据存储的最小单位是文档，同一个表中存储的文档属性可以是不同的，数据可以使用XML、JSON或JSONB等多种形式存储。</p>
+<p>典型产品：MongoDB、CouchDB</p>
+<p>（4）图形数据库</p>
+<p>图形数据库允许我们将数据以图的方式存储。实体会被作为顶点，而实体之间的关系则会被作为边。比如我们有三个实体，Steve Jobs、Apple和Next，则会有两个“Founded by”的边将Apple和Next连接到Steve Jobs。</p>
+<p>典型产品：Neo4J、InforGrid</p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV16x411U7bc">一个比较好的科普小视频</a></p>
+</li>
+</ol>
+<h2 id="二：数据库的基本操作（本次记录采用MySQL数据库）"><a href="#二：数据库的基本操作（本次记录采用MySQL数据库）" class="headerlink" title="二：数据库的基本操作（本次记录采用MySQL数据库）"></a>二：数据库的基本操作（本次记录采用MySQL数据库）</h2><ol>
+<li><p>库</p>
+<ul>
+<li><p>展示所有数据库</p>
+<p>show databases；</p>
+</li>
+<li><p>创建数据库</p>
+<p>create database 数据库名;</p>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxryk21drj309o01g743.jpg"></p>
+</li>
+<li><p>删除数据库</p>
+<p>drop database 数据库名;</p>
+</li>
+<li><p>选择数据库</p>
+<p>use 数据库名；</p>
+</li>
+</ul>
+</li>
+<li><p>表</p>
+<ul>
+<li><p>创建表</p>
+<blockquote>
+<p>create table table_name (column_name1 column_type1,column_name2 column_type2);</p>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxrzcktcrj30a603ca9x.jpg"></p>
+</li>
+<li><p>删除表</p>
+<blockquote>
+<p>drop table table_name;</p>
+</blockquote>
+<p>这就不演示了。</p>
+</li>
+</ul>
+</li>
+<li><p>数据</p>
+<ul>
+<li><p>插入数据</p>
+<blockquote>
+<p>insert into table_name (字段1，字段2.。。。） values (值1，值2。。。);</p>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/007YMQQNgy1gfxs3clxi4j30fs05laa1.jpg"></p>
+<p>注意，在values 后面的值中，如果是字符型的，一定要加引号，前面无所谓，不过我这图截的不好，可能引号看不出来！但实际上是有的。</p>
+</li>
+</ul>
+</li>
+</ol>
+<pre><code> &gt; insert into table_name  values (值1，值2.。。);
+
+ 当没有写具体的字段名时，默认为全部字段插入值。
+
+ ![](C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_wuMhv2QRCC.png)
+
+ &gt; insert into table_name values(值1，值2),(值3，值4);
+
+  也可以一次性插入很多行数据，但在后面的括号之间，注意一定要加逗号，还有这一次我偷点懒，省略了字段值。如果不是全部字段名都添加值的话，你也可以不省略。
+
+ ![](C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_UZrjcw0ymH.png)</code></pre>
+<ul>
+<li><p>删除数据</p>
+<blockquote>
+<p>delete from table_name  [where …..];</p>
+</blockquote>
+<p>注意，凡是删除语句，一定要慎用，delete语句，如果你不加where语句，那么整张表内的数据将会被你全部删除。</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_QwZe2cwg5b.png"></p>
+</li>
+<li><p>更新数据</p>
+<blockquote>
+<p>update table_name set 字段名1=字段值1，字段名2=字段值2 where 。。。;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_vBPA66dwWf.png"></p>
+<p>注意，如果不加where语句的话，表中所有的数据都会发生改变。针对数据库的操作一定要慎重！</p>
+</li>
+</ul>
+<h2 id="三：数据库的非基本操作"><a href="#三：数据库的非基本操作" class="headerlink" title="三：数据库的非基本操作"></a>三：数据库的非基本操作</h2><ol>
+<li><p>MySQL数据类型</p>
+<ul>
+<li><p>数值类型 </p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\jglPAIlsXt.png"></p>
+</li>
+<li><p>日期和时间类型</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\chrome_PQ9gvbg8oa.png"></p>
+</li>
+<li><p>字符串类型</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\chrome_yGyoW7Dt3Y.png"></p>
+</li>
+</ul>
+</li>
+<li><p>alter命令</p>
+<ul>
+<li><p>删除字段</p>
+<blockquote>
+<p>alter table table_name drop column_name;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\1kgMXNX3Gn.png"></p>
+<p>当表中只有一个字段时，无法删除该字段。</p>
+</li>
+<li><p>增加字段</p>
+<blockquote>
+<p>alter table table_name add column_name column_type;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_Tnr5Bbooqa.png"></p>
+<p>增加字段，默认情况下会将字段增加到末尾，当然你也可以选择增加的字段的位置，详情见菜鸟教程吧。</p>
+</li>
+<li><p>修改字段类型及名称</p>
+<p>modify   只能修改字段的类型，不能修改字段的名称</p>
+<blockquote>
+<p>alter table table_name modify column_name new_column_type;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\2TyAinUomd.png"></p>
+<p>change   既能修改字段的类型，又能修改字段的名称</p>
+<blockquote>
+<p>alter table table_name change old_column_name  new_column_name  new_column_type;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_4MMkAuL6Ia.png"></p>
+</li>
+<li><p>修改表名</p>
+<blockquote>
+<p>alter table table_name rename to new_table_name;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_50CyeWnUqq.png"></p>
+</li>
+</ul>
+</li>
+<li><p>select    内容</p>
+<p>[from]</p>
+<p>[where]</p>
+</li>
+</ol>
+<pre><code>[group by]    
+
+[having]    
+
+[order by]
+
+[limit]</code></pre>
+<ul>
+<li><p>内容为表达式或固定的数据。</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_Tv5OH83ZBX.png"></p>
+</li>
+<li><p>as 给字段名重命名</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_SjTxS6lhbW.png"></p>
+</li>
+<li><p>select distinct       在查到的字段值中，只返回不同的值</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\iulvKX2WlQ.png"></p>
+</li>
+<li><p>where 其实它起的是一个限定作用，后面会接一些算数，比较，逻辑运算符，这些都很简单，我就不写了！</p>
+<p>模糊查找运算符like    通常要和SQL通配符配合使用</p>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\chrome_QkZHl7V3ml.png"></p>
+<blockquote>
+<p>select column_name(s) from table_name where column like pattern;</p>
+</blockquote>
+<p><img src="C:\Users\hello\Documents\ShareX\Screenshots\2020-06\mysql_Cgtkvfiem9.png"></p>
+<p>上图中的结果相当于是查找出所有以 i 结尾，并返回结果。</p>
+</li>
+</ul>
+<p>   ​        正则匹配运算符 regexp：这个正则表达式的内容太多了，一篇博客写不完。所以给各位推荐篇文章。</p>
+<p>   ​        <a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_36761831/article/details/828621350">正则表达式</a></p>
+<ul>
+<li><p>group by  以所给字段进行分组  </p>
+<p>推荐个文章，个人觉得非常好</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/day1day1up/p/11301696.html">group by 小详解</a></p>
+</li>
+<li><p>having</p>
+<p>这个功能跟where，一样（至少我觉得一样），只不过用在group by后面</p>
+</li>
+<li><p>order   by</p>
+<p>按照选中列排序，默认升序，</p>
+<p>order by column [desc];    </p>
+</li>
+<li><p>limit</p>
+<p>对查询到的数据，进行一个限制输出</p>
+<p>limit   起始行号 展示行数<br>注意，起始行号从零开始，展示行数即显示的条数，不要误认为结束的行号</p>
+</li>
+</ul>
+<hr>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/" data-id="ckfqo7sbp000jrktub8aidou0" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/web%E5%AE%89%E5%85%A8/" rel="tag">web安全</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">web安全01：基础环境搭建</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/php%E5%9F%BA%E7%A1%80/">php基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">php面向对象</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/web%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8/">web安全入门</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E5%9F%BA%E7%A1%80/" rel="tag">php基础</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" rel="tag">php面向对象</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/web%E5%AE%89%E5%85%A8/" rel="tag">web安全</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/php%E5%9F%BA%E7%A1%80/" style="font-size: 10px;">php基础</a> <a href="/tags/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" style="font-size: 10px;">php面向对象</a> <a href="/tags/web%E5%AE%89%E5%85%A8/" style="font-size: 20px;">web安全</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/10/">October 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/07/">July 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A802%EF%BC%9A%E8%AE%A4%E8%AF%86%E6%95%B0%E6%8D%AE%E5%BA%93/">web安全02：认识数据库</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/web%E5%AE%89%E5%85%A801%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/">web安全01：基础环境搭建</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%EF%BC%88%E4%B8%80%EF%BC%89/">php面向对象的程序设计</a>
+          </li>
+        
+          <li>
+            <a href="/2020/10/01/php%E7%9A%84%E5%86%8D%E6%AC%A1%E9%82%82%E9%80%85-%E4%B8%80/">php的回炉重造</a>
+          </li>
+        
+          <li>
+            <a href="/2020/07/15/python%E8%B5%84%E6%BA%90%E6%8E%A2%E6%B5%8B%E5%B7%A5%E5%85%B7%E7%BC%96%E5%86%99/">python资源探测工具编写</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
